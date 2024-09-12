@@ -268,7 +268,7 @@ exports.updateProfile =async (req,res)=>{
     }
 };
 
-exports.deleteProfile =async (req,res)=>{
+exports.deleteMyProfile =async (req,res)=>{
 
     try {
         let user =await User.findById(req.user._id);
@@ -278,14 +278,20 @@ exports.deleteProfile =async (req,res)=>{
         const userid=user._id;//
         const following=user.following;
 
+        //removing avatar form cloudinary b4 deleting user
+        await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
         await User.findByIdAndDelete(req.user._id);//await user.remove();
      
-        
+        // Clear token cookie
         res.cookie("token", " ",{expires :new Date(Date.now()) ,httpOnly :true});
         
         //deleting all posts of the user
-        for (let index = 0; index < posts.length; index++) {
-            const post = await Post.findByIdAndDelete(posts[index]);
+        for (let i = 0; i < posts.length; i++) {
+            const post = await Post.findById(posts[i]);
+
+            await cloudinary.v2.uploader.destroy(post.image.public_id);
+            await Post.findByIdAndDelete(posts[i]);
             //await cloudinary.v2.uploader.d estroy(post.image.public_id);
         }
 
@@ -304,7 +310,7 @@ exports.deleteProfile =async (req,res)=>{
         for (let ind = 0; ind < following.length; ind++) {
             const follows=await User.findById(following[ind]);//following[index]-will give following users id
 //follows is as in whom user follows . User is a follower of (follows).
-            const index=follows.followers.indexOf(useid);
+            const index=follows.followers.indexOf(userid);
             follows.followers.splice(index,1);
             await follows.save();               
         }
@@ -481,6 +487,32 @@ exports.getMyPosts = async (req, res) => {
     try {
        //console.log('user id' ,req.user._id) 
       const user  = await User.findById(req.user._id);
+  
+      const posts = [];
+
+      for (let i = 0; i < user.posts.length; i++) {
+        const post =await Post.findById(user.posts[i]).populate("likes comments.user owner");
+        posts.push(post);
+        
+      }
+
+      res.status(200).json({
+        success: true,
+        posts,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  };
+
+
+exports.getUserPosts = async (req, res) => {
+    try {
+       //console.log('user id' ,req.user._id) 
+      const user  = await User.findById(req.params.id);
   
       const posts = [];
 

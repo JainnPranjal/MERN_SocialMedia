@@ -212,6 +212,31 @@ export const updateProfile =(name,email , avatar  ) => async (dispatch) =>{
 };
 
 
+export const deleteMyProfile =() => async (dispatch) =>{
+
+  try {
+      dispatch({ type: "deleteProfileRequest",});
+
+      const {data} =await axios.delete(   
+          "http://localhost:4001/api/v1/delete/myProfile",
+          {
+            withCredentials: true, 
+           }
+      );
+
+      dispatch({ 
+        type: "deleteProfileSuccess", 
+        payload: data.message ,
+      });
+  } catch (error) {
+      dispatch({ 
+        type: "deleteProfileFailure",
+        payload: error.response.data.message || error.message,
+       });
+  }
+};
+
+
 export const updatePassword =(oldPassword , newPassword) => async (dispatch) =>{
 
   try {
@@ -236,6 +261,188 @@ export const updatePassword =(oldPassword , newPassword) => async (dispatch) =>{
           payload: error.response.data.message || error.message, });
   }
 };
+
+
+
+export const forgotPassword =(email) => async (dispatch) =>{
+
+  try {
+      
+      dispatch({ type: "forgotPasswordRequest",});
+
+      const {data} =await axios.post(   
+          "http://localhost:4001/api/v1/forgot/password",
+          { email } ,
+          {
+            withCredentials: true, // Ensure cookies are sent
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+      );
+
+     
+      dispatch({ type: "forgotPasswordSuccess", payload: data.message ,});
+  } catch (error) {
+      dispatch({ type: "forgotPasswordFailure",
+          payload: error.response.data.message || error.message, });
+  }
+};
+
+
+
+export const resetPassword =(token ,password) => async (dispatch) =>{
+
+  try {
+      
+      dispatch({ type: "resetPasswordRequest",});
+
+      const {data} =await axios.put(   
+          `http://localhost:4001/api/v1/password/reset/${token}`,
+          { password
+            
+          } ,
+          {
+            withCredentials: true, // Ensure cookies are sent
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+      );
+
+     
+      dispatch({ type: "resetPasswordSuccess", payload: data.message ,});
+  } catch (error) {
+      dispatch({ type: "resetPasswordFailure",
+          payload: error.response.data.message || error.message, });
+  }
+};
+
+
+export const getUserPosts = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "userPostsRequest",
+    });
+    
+    const config = {
+      withCredentials: true, 
+    };
+  
+    const { data } = await axios.get(`http://localhost:4001/api/v1/userposts/${id}`, config);
+  
+    dispatch({
+      type: "userPostsSuccess",
+      payload: data.posts, 
+    });
+  } catch (error) {
+    dispatch({
+      type: "userPostsFailure",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+
+export const getUserProfile = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "userProfileRequest",
+    });
+    
+    const config = {
+      withCredentials: true, 
+    };
+  
+    const { data } = await axios.get(`http://localhost:4001/api/v1/user/${id}`, config);
+  
+    dispatch({
+      type: "userProfileSuccess",
+      payload: data.user, 
+    });
+  } catch (error) {
+    dispatch({
+      type: "userProfileFailure",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

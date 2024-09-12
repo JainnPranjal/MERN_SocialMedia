@@ -15,6 +15,8 @@ const Login = () => {
     const alert =useAlert();
 
     const {error} =useSelector(state => state.user);
+    const {message } =useSelector(state => state.like );
+    
 
     const loginHandler =(e)=>{
         e.preventDefault();
@@ -30,8 +32,12 @@ const Login = () => {
           alert.error(error);
           dispatch({ type : "clearErrors"});
       }
+      if(message){
+        alert.success(message);
+        dispatch({ type : "clearMessage"});
+    }
       
-  },[alert ,error , dispatch]);
+  },[alert ,error ,message , dispatch]);
 
 
   return (

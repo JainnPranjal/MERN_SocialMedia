@@ -1,40 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import './Account.css';
+import React, { useEffect, useReducer, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteMyProfile, getMyPosts, logoutUser } from '../../Actions/User';
+import { deleteMyProfile, getMyPosts, getUserPosts, getUserProfile, logoutUser } from '../../Actions/User';
 import Loader from '../Loader/Loader';
 import Post from '../Post/Post';
 import { Avatar, Button, Dialog, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 import User from '../User/User';
 
-const Account = () => {
+const UserProfile = () => {
 
     const dispatch =useDispatch();
     const alert =useAlert();
+    const params =useParams();
      
-    const {user ,loading: userLoading} =useSelector(state => state.user);
-    const {loading ,error ,posts } =useSelector((state) => state.myPosts);
+    const {user ,loading: userLoading} =useSelector(state => state.UserProfile);
+    const {user: me,} =useSelector(state => state.user);
+
+
+    const {loading ,error ,posts } =useSelector((state) => state.userPosts);
     const {error :likeError ,loading :deleteLoading ,message} = useSelector ((state) =>state.like);
 
     const [followersToggle ,setFollowersToggle] = useState(false);
     const [followingToggle ,setFollowingToggle] = useState(false);
- 
-    const logoutHandler = ()=>{
-         dispatch(logoutUser());
-        alert.success("Logged out successfully");
+    const [following,setFollowing] = useState(false);
+    const [myProfile ,setMyProfile] = useState(false);
+    
 
-    };
+    const followHandler =()=>{
 
-    const deleteProfileHandler =async()=>{
-        await dispatch(deleteMyProfile());
-        dispatch(logoutUser());
+        setFollowing(!following);
     }
 
     useEffect(() => {
-        dispatch(getMyPosts());
-    },[dispatch]);
+        dispatch(getUserPosts(params.id));
+        dispatch(getUserProfile(params.id));
+
+        if(user._id ===params.id){
+            setMyProfile(true);
+        }
+    },[dispatch ,user._id ,params.i]);
 
     useEffect(() =>{
         if(error){
@@ -74,7 +79,7 @@ const Account = () => {
                   isAccount ={true}
                   isDelete={true}   
               />
-            )) : (<Typography variant ="h3"> You have not uploaded any posts  :| </Typography>)
+            )) : (<Typography variant ="h3"> User has not made any post yet:| </Typography>)
         }
         </div>
         <div className="accountright">
@@ -104,17 +109,17 @@ const Account = () => {
                 <Typography>{user.posts.length} </Typography> 
             </div>
 
-            <Button onClick={logoutHandler} variant ="contained"> Logout</Button>
-
-            <Link to='/update/profile'>Edit Profile</Link>
-            <Link to='/update/password'>change password</Link>
-
-            <Button variant ="text"
-                    onClick={deleteProfileHandler}
-                    disabled={deleteLoading}
-                    style={{ color : "red" ,margin :"2vmax"}}> 
-                    Delete My Profile
-            </Button>
+            {
+                myProfile ? null :(
+                    <Button 
+                    onClick={followHandler}
+                    style={{background: following ?"red":"blue"}}
+                    variant ="contained">{
+                       following ? "Unfollow " : "Follow" 
+                    }
+                    </Button>
+                )
+            }
 
 {/* pop dailog box for followers of user */}
             <Dialog
@@ -173,4 +178,4 @@ const Account = () => {
   );
 };
 
-export default Account
+export default UserProfile

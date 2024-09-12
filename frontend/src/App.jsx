@@ -11,6 +11,9 @@ import NewPost from './components/NewPost/NewPost';
 import Register from './components/Register/Register';
 import UpdateProfile from './components/UpdateProfile/UpdateProfile';
 import UpdatePassword from './components/UpdatePassword/UpdatePassword';
+import ForgotPassword from './components/ForgotPassword/ForgotPassword';
+import ResetPassword from './components/ResetPassword/ResetPassword';
+import UserProfile from './components/UserProfile.jsx/UserProfile';
 
 function App() {
  
@@ -42,10 +45,25 @@ function App() {
          element={isAuthenticated ? <UpdatePassword /> : <Login/>} 
          />
 
+      <Route 
+         path='/forgot/password'
+         element={isAuthenticated ? <UpdatePassword /> : <ForgotPassword/>} 
+         /> 
+
 
       <Route 
          path='/register'
          element={isAuthenticated ? <Account/> :<Register/> }
+         />
+
+        <Route 
+         path='/password/reset/:token'
+         element={isAuthenticated ? <UpdatePassword />  :<ResetPassword/> }
+         />
+
+         <Route 
+         path='/user/:id'
+         element={isAuthenticated ? <UserProfile />  :<Login/> }
          />
       
       </Routes>

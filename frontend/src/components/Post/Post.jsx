@@ -84,12 +84,11 @@ const Post = ({
     };
 
     useEffect(()=>{
-        likes.forEach((item) => {
-            if(item._id ===user._id){
-                setLiked(true);                
-            }
-        });
-    },[likes ,user._id]);
+        if (user && user._id) {
+            const isLiked = likes.some((item) => item && item._id === user._id);
+            setLiked(isLiked);
+        }
+    },[likes ,user._id ,user]);
 
     
   return (
@@ -165,14 +164,14 @@ const Post = ({
             <div className="DialogBox">
                 <Typography variant="h4">
                     Liked By :
-                    {likes.map((like)=>(
+                    {likes.length > 0 ? likes.map((like) => like ? (
                             <User
-                            key={like._id}
-                            likeId={like._id}
-                            name={like.name}
-                            avatar={like.avatar.url}
-                          /> 
-                        ))}
+                                key={like._id}
+                                likeId={like._id}
+                                name={like.name}
+                                avatar={like.avatar.url}
+                            />
+                        ) : null) : <Typography>No Likes</Typography>}
                 </Typography>
             </div>
         </Dialog>
@@ -197,24 +196,23 @@ const Post = ({
                        </Button>                    
                     </form> 
 
-                    {
-                        comments.length >0 ? (
-                          comments.map((item)=> 
-                          <CommentCard 
-                          key={item._id}
-                          userId={item.user._id} 
-                          name={item.user.name} 
-                          avatar={item.user.avatar.url}
-                           comment={item.comment} 
-                           commentId={item._id}
-                           isAccount={isAccount}
-                           postId={postId}/>)
-                        ) : (
-                            <Typography> No Comments</Typography>
-                        )
-                    }
-
-                    
+                    {comments.length > 0 ? (
+                        comments.map((item) => item.user ? (
+                            <CommentCard
+                                key={item._id}
+                                userId={item.user._id}
+                                name={item.user.name}
+                                avatar={item.user.avatar.url}
+                                comment={item.comment}
+                                commentId={item._id}
+                                isAccount={isAccount}
+                                postId={postId}
+                            />
+                        ) : null)
+                    ) : (
+                        <Typography>No Comments</Typography>
+                    )}
+                                        
             </div>
         </Dialog>
 

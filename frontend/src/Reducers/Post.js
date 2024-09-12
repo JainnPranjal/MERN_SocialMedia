@@ -64,6 +64,42 @@ export const likeReducer = createReducer(initialState, (builder) => {
         state.error = action.payload;
       })
 
+      .addCase('deleteProfileRequest', (state) => {
+        state.loading = true;
+      })
+      .addCase('deleteProfileSuccess', (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+      })
+      .addCase('deleteProfileFailure', (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase('forgotPasswordRequest', (state) => {
+        state.loading = true;
+      })
+      .addCase('forgotPasswordSuccess', (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+      })
+      .addCase('forgotPasswordFailure', (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase('resetPasswordRequest', (state) => {
+        state.loading = true;
+      })
+      .addCase('resetPasswordSuccess', (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+      })
+      .addCase('resetPasswordFailure', (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       .addCase('updateCaptionRequest', (state) => {
         state.loading = true;
       })
@@ -118,6 +154,25 @@ export const myPostsReducer = createReducer(initialState, (builder) => {
       state.posts = action.payload;
     })
     .addCase('myPostsFailure', (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase('clearErrors', (state) => {
+      state.error = null;
+    });
+  });
+ 
+ 
+export const userPostsReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase('userPostsRequest', (state) => {
+      state.loading = true;
+    })
+    .addCase('userPostsSuccess', (state, action) => {
+      state.loading = false;
+      state.posts = action.payload;
+    })
+    .addCase('userPostsFailure', (state, action) => {
       state.loading = false;
       state.error = action.payload;
     })

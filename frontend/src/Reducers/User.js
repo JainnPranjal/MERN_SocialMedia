@@ -115,3 +115,20 @@ export const allUsersReducer = createReducer(initialState, (builder) => {
 });
 
 
+export const userProfileReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase('userProfileRequest', (state) => {
+      state.loading = true;
+    })
+    .addCase('userProfileSuccess', (state, action) => {
+      state.loading = false;
+      state.user = action.payload;
+    })
+    .addCase('userProfileFailure', (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase('clearErrors', (state) => {
+      state.error = null;
+    });
+});
