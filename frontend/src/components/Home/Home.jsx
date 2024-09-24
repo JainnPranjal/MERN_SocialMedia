@@ -13,9 +13,9 @@ const Home = () => {
     const dispatch =useDispatch();
     const alert = useAlert();
     
-    const {loading ,posts,error} = useSelector(state=>state.postOfFollowing)
+    const {loading ,posts,error} = useSelector((state)=>state.postOfFollowing);
     
-    const {users ,loading :usersLoading} = useSelector((state) => state.allUsers)
+    const {users ,loading :usersLoading} = useSelector((state) => state.allUsers);
     
     const {error :likeError ,message} = useSelector ((state) =>state.like);
     
@@ -42,14 +42,15 @@ const Home = () => {
     },[alert ,error ,message,likeError , dispatch]);
 
 
-  return loading ===true || usersLoading === true 
-         ? (<Loader/>) : 
+  return loading === true || usersLoading === true ?
+         (<Loader/>)
+          : 
          (
         <div className='home'>
         <div className="homeleft">
     
         {
-            posts && posts.length >0  ? posts.map((post)=>(
+            posts && posts.length >0  ? (posts.map((post)=>(
                 <Post key={post._id}   
                 //   postImage='https://d1jyxxz9imt9yb.cloudfront.net/medialib/5027/image/p1300x1300/3_reduced.webp'
                   postId={post._id}
@@ -62,7 +63,8 @@ const Home = () => {
                   ownerId={post.owner._id}
     
               />
-            )) : <Typography variant ="h6">NO Posts </Typography>
+            )) 
+          ): (<Typography variant ="h6">NO Posts </Typography>)
         }
         </div>
         <div className="homeright">
@@ -84,4 +86,4 @@ const Home = () => {
   
 }
 
-export default Home
+export default Home;

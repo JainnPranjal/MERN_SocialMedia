@@ -6,7 +6,7 @@
   }
   
   .accountleft {
-    background-image: linear-gradient(to right, #fff5bc, #cec1ff);
+    background-image: linear-gradient(to right, #8d8b89, hsl(252, 20%, 5%));
   
     display: flex;
     flex-direction: column;

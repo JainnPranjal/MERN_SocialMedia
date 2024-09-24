@@ -14,6 +14,8 @@ import UpdatePassword from './components/UpdatePassword/UpdatePassword';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword';
 import ResetPassword from './components/ResetPassword/ResetPassword';
 import UserProfile from './components/UserProfile.jsx/UserProfile';
+import Search from './components/Search/Search';
+import NotFound from './components/NotFound/NotFound';
 
 function App() {
  
@@ -64,6 +66,14 @@ function App() {
          <Route 
          path='/user/:id'
          element={isAuthenticated ? <UserProfile />  :<Login/> }
+         />
+
+         <Route path='/search' 
+         element={isAuthenticated ? <Search/>  :<Login/> }
+         />
+
+         <Route  path='/*'
+         element={<NotFound/>}
          />
       
       </Routes>

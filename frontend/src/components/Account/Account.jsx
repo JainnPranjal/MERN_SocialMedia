@@ -16,6 +16,7 @@ const Account = () => {
      
     const {user ,loading: userLoading} =useSelector(state => state.user);
     const {loading ,error ,posts } =useSelector((state) => state.myPosts);
+   
     const {error :likeError ,loading :deleteLoading ,message} = useSelector ((state) =>state.like);
 
     const [followersToggle ,setFollowersToggle] = useState(false);

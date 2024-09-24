@@ -81,7 +81,7 @@ export const getFollowingPosts = () => async (dispatch) => {
   };
 
 
-export const getAllUSers = () => async (dispatch) => {
+export const getAllUSers = (name='') => async (dispatch) => {
     try {
       dispatch({
         type: "allUsersRequest",
@@ -91,8 +91,8 @@ export const getAllUSers = () => async (dispatch) => {
         withCredentials: true, // Include cookies in the request
       };
     
-      const { data } = await axios.get('http://localhost:4001/api/v1/users', config);
-    
+      const { data } = await axios.get(`http://localhost:4001/api/v1/users?name=${name}`, config);
+    //if name is empty as in query hence we 'll hv all the users
       dispatch({
         type: "allUsersSuccess",
         payload: data.users, 
@@ -363,6 +363,32 @@ export const getUserProfile = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "userProfileFailure",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+
+
+export const followAndUnfollowUser = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "followUserRequest",
+    });
+    
+    const config = {
+      withCredentials: true, 
+    };
+  
+    const { data } = await axios.get(`http://localhost:4001/api/v1/follow/${id}`, config);
+  
+    dispatch({
+      type: "followUserSuccess",
+      payload: data.message, 
+    });
+  } catch (error) {
+    dispatch({
+      type: "followUserFailure",
       payload: error.response.data.message,
     });
   }

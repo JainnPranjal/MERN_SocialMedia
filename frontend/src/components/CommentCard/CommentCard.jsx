@@ -5,7 +5,7 @@ import './CommentCard.css';
 import { Delete } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteCommentOnPost } from '../../Actions/Post';
-import { getFollowingPosts } from '../../Actions/User';
+import { getFollowingPosts, getMyPosts } from '../../Actions/User';
 
 const CommentCard = ({
     userId,
@@ -19,19 +19,22 @@ const CommentCard = ({
 
   const {user} =useSelector(state => state.user);
   const dispatch = useDispatch ();
-
-
-  const deleteCommentHandler =() =>{
-    dispatch(deleteCommentOnPost(postId ,commentId));
-
+  
+  const deleteCommentHandler =async() =>{
+    await dispatch(deleteCommentOnPost(postId ,commentId));
+ 
+    //after deleting gettin back the updated posts
     if(isAccount){//deleted comment will be updated onscreen w/o needing to refresh again   i.e,/ calling PostsOfFollowing reducer again 
-      console.log('myposts')
+      dispatch(getMyPosts());
+      console.log('getmyposts')
     }
     else{
       dispatch(getFollowingPosts());
-
+      console.log('getFollposts')
     }
-  }
+  };
+
+//useEFfect for changes to show effect
 
   return (
     <div className="commentUser">
@@ -60,4 +63,4 @@ const CommentCard = ({
   )
 }
 
-export default CommentCard
+export default CommentCard;  

@@ -135,6 +135,19 @@ export const likeReducer = createReducer(initialState, (builder) => {
         state.loading = false;
         state.error = action.payload;
       })
+
+      .addCase('followUserRequest', (state) => {
+        state.loading = true;
+      })
+      .addCase('followUserSuccess', (state, action) => {
+        state.loading = false;
+        state.message = action.payload;
+      })
+      .addCase('followUserFailure', (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+       
       .addCase('clearErrors', (state) => {
         state.error = null;
       })

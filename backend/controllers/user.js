@@ -315,6 +315,38 @@ exports.deleteMyProfile =async (req,res)=>{
             await follows.save();               
         }
 
+
+        //remov'g all comments of the user from all posts
+        const allposts =await Post.find(); //gettingthe posts arr
+        
+        for (let i = 0; i < allposts.length; i++) {
+            const indvpost =await Post.findById(allposts[i]._id);
+
+            for (let j = 0; j < allposts.comments.length; j++) {
+                if(indvpost.comments[j].user ===userid){
+                    indvpost.comments.splice(j,1);
+                }
+            }
+            
+            await indvpost.save();
+        }
+
+
+         //remov'g all likes of the user from all posts
+         
+         for (let i = 0; i < allposts.length; i++) {
+             const indvpost =await Post.findById(allposts[i]._id);
+ 
+             for (let j = 0; j < allposts.likes.length; j++) {
+                 if(indvpost.likes[j] === userid){
+                     indvpost.likes.splice(j,1);
+                 }
+             }
+             
+             await indvpost.save();
+         }
+        
+
         res.status(200).json({
             success: true,
             message: "Profile Deleted",
@@ -375,7 +407,8 @@ exports.myProfile = async (req, res) => {
   
   exports.getAllUsers = async (req, res) => {
     try {
-      const users = await User.find({}).populate("posts");
+      const users = await User.find({name :{$regex: req.query.name , $options: 'i' }
+    });
   
       res.status(200).json({
         success: true,

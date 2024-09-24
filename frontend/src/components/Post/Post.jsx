@@ -51,22 +51,17 @@ const Post = ({
         }
     };
 
-    
-
-    const addCommentHandler =async (e)=>{
+    const addCommentHandler = async (e) => {
         //console.log(' add comment');
         e.preventDefault();
-
-        await dispatch(addCommentOnPost(postId,commentValue));
-
-        if(isAccount){//when we are in our accounts section,i.e, looking for our own posts,we wont dispatch getFollowingPosts
-            dispatch(getMyPosts());
+        await dispatch(addCommentOnPost(postId, commentValue));
+    
+        if (isAccount) {//when we are in our accounts section,i.e, looking for our own posts,we wont dispatch getFollowingPosts
+          dispatch(getMyPosts());
+        } else {
+          dispatch(getFollowingPosts());
         }
-        else{
-            dispatch(getFollowingPosts());
-
-        }
-    }; 
+      };
 
     const updateCaptionHandler =async(e)=>{
 
@@ -113,7 +108,7 @@ const Post = ({
               }}
             />
 
-            <Link to={`user/${ownerId}`}>
+            <Link to={`/user/${ownerId}`}>
                 <Typography fontWeight={700}> {ownerName}</Typography>
             </Link>  
 
